@@ -1,0 +1,162 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-parcelize'
+    id 'jacoco'
+}
+
+apply from: "$rootDir/codeCoverage.gradle"
+
+// Create a variable called debugKeystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+def debugKeystorePropertiesFile = rootProject.file("$rootDir/keystores/debug_bundle_keystore.properties")
+def releaseKeystorePropertiesFile = rootProject.file("$rootDir/keystores/release_bundle_keystore.properties")
+
+// Initialize a new Properties() object called debugKeystoreProperties.
+def debugKeystoreProperties = new Properties()
+def releaseKeystoreProperties = new Properties()
+
+// Load your keystore.properties file into the debugKeystoreProperties object.
+debugKeystoreProperties.load(new FileInputStream(debugKeystorePropertiesFile))
+releaseKeystoreProperties.load(new FileInputStream(releaseKeystorePropertiesFile))
+
+android {
+    compileSdkVersion 31
+    defaultConfig {
+        applicationId "com.kingdom"
+        minSdkVersion 26
+        targetSdkVersion 31
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        config {
+            keyAlias debugKeystoreProperties['keyAlias']
+            keyPassword debugKeystoreProperties['keyPassword']
+            storeFile file(debugKeystoreProperties['storeFile'])
+            storePassword debugKeystoreProperties['storePassword']
+        }
+
+        release {
+            keyAlias releaseKeystoreProperties['keyAlias']
+            keyPassword releaseKeystoreProperties['keyPassword']
+            storeFile file(releaseKeystoreProperties['storeFile'])
+            storePassword releaseKeystoreProperties['storePassword']
+        }
+    }
+
+    defaultConfig {
+        applicationId = "com.kingdom"
+        manifestPlaceholders = [appName:"Template"]
+        signingConfig signingConfigs.debug
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            testCoverageEnabled true
+            signingConfig signingConfigs.debug
+        }
+
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // Specifies one flavor dimension.
+    flavorDimensions "version"
+    productFlavors {
+        dev {
+            dimension "version"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+            manifestPlaceholders = [appName:"Template${versionNameSuffix}"]
+        }
+
+        qa {
+            dimension "version"
+            applicationIdSuffix ".qa"
+            versionNameSuffix "-qa"
+            manifestPlaceholders = [appName:"Template${versionNameSuffix}"]
+        }
+
+        prod {
+            dimension "version"
+        }
+    }
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+                excludes = ['jdk.internal.*']
+            }
+        }
+        animationsDisabled true
+    }
+
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
+//    kotlinOptions {
+//        jvmTarget = JavaVersion.VERSION_1_8.toString()
+//    }
+
+    buildFeatures {
+        dataBinding true
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.activity:activity-ktx:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    implementation 'androidx.annotation:annotation:1.3.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidx_lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidx_lifecycle_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation "io.insert-koin:koin-android:$koin_version"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "org.assertj:assertj-core:$assertJ_version"
+    testImplementation "androidx.arch.core:core-testing:$androidx_arch_core_testing_version"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$mockito_kotlin_version"
+    testImplementation "org.mockito:mockito-android:$mockito_android_version"
+
+    testImplementation "com.squareup.retrofit2:retrofit-mock:$retrofit_mock_version"
+    testImplementation "androidx.navigation:navigation-testing:$nav_version"
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0'
+
+    androidTestImplementation "org.assertj:assertj-core:$assertJ_version"
+    androidTestImplementation "androidx.test.ext:junit:$junit_test_ext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
+    androidTestImplementation "androidx.test:core:$androidx_test_core_version"
+    androidTestImplementation "androidx.test:runner:$androidx_test_core_version"
+    androidTestImplementation "androidx.test.espresso:espresso-web:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+    androidTestImplementation "androidx.test.ext:junit-ktx:$junit_test_ext_version"
+    androidTestImplementation "androidx.test:rules:$androidx_test_rules_version"
+}
