@@ -1,2 +1,2 @@
-rootProject.name = "Base Project Template"
+rootProject.name = "android-jetpack-compose"
 include ':app'

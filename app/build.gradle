@@ -52,7 +52,7 @@ android {
 
     defaultConfig {
         applicationId = "com.kingdom"
-        manifestPlaceholders = [appName:"Template"]
+        manifestPlaceholders = [appName:"Compose Em"]
         signingConfig signingConfigs.debug
     }
 
@@ -102,39 +102,55 @@ android {
         animationsDisabled true
     }
 
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
-//    kotlinOptions {
-//        jvmTarget = JavaVersion.VERSION_1_8.toString()
-//    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 
     buildFeatures {
-        dataBinding true
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.0.5'
     }
 }
 
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.activity:activity-ktx:1.4.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation "androidx.core:core-ktx:$ktx_core_version"
+    implementation "androidx.activity:activity-ktx:$ktx_activity_version"
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation "com.google.android.material:material:$material_version"
+    //TODO: remove this as we won't need it for compose
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
-    implementation 'androidx.annotation:annotation:1.3.0'
+    implementation "androidx.annotation:annotation:$androidx_annotation_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidx_lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidx_lifecycle_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation "com.google.android.material:material:$material_version"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    implementation "androidx.compose.foundation:foundation:$compose_version"
+    implementation "androidx.compose.material:material:$compose_material_version"
+    implementation "androidx.compose.material:material-icons-core:$compose_material_version"
+    implementation "androidx.compose.material:material-icons-extended:$compose_material_version"
+    implementation "androidx.activity:activity-compose:$compose_activity_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_livedata_version"
+    implementation "androidx.compose.compiler:compiler:$compose_version"
 
 
     testImplementation "junit:junit:$junit_version"
@@ -145,13 +161,13 @@ dependencies {
 
     testImplementation "com.squareup.retrofit2:retrofit-mock:$retrofit_mock_version"
     testImplementation "androidx.navigation:navigation-testing:$nav_version"
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinx_coroutines_test_version"
 
     androidTestImplementation "org.assertj:assertj-core:$assertJ_version"
     androidTestImplementation "androidx.test.ext:junit:$junit_test_ext_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
-    androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:$ui_automater_version"
     androidTestImplementation "androidx.test:core:$androidx_test_core_version"
     androidTestImplementation "androidx.test:runner:$androidx_test_core_version"
     androidTestImplementation "androidx.test.espresso:espresso-web:$espresso_version"
@@ -159,4 +175,5 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
     androidTestImplementation "androidx.test.ext:junit-ktx:$junit_test_ext_version"
     androidTestImplementation "androidx.test:rules:$androidx_test_rules_version"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_test_version"
 }
